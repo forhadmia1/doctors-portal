@@ -31,7 +31,7 @@ const testimonials = [
 
 const Testimonial = () => {
     return (
-        <section className='my-24'>
+        <section className='my-24 p-5'>
             <div className='container mx-auto flex justify-between'>
                 <div>
                     <h3 className='text-secondary text-xl font-semibold'>Testimonial</h3>
@@ -41,7 +41,7 @@ const Testimonial = () => {
                     <img className='w-40' src={qoutes} alt="" />
                 </div>
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-3 px-20 gap-14'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-14 mt-16'>
                 {
                     testimonials.map(testimonil => <TestimonialCard
                         key={testimonil.id}

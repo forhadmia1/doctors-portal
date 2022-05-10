@@ -3,10 +3,8 @@ import React from 'react';
 const TestimonialCard = ({ testimonil }) => {
     const { name, comment, img, country } = testimonil;
     return (
-        <div class="card w-96 bg-base-100">
-            <div >
-                <p>{comment}</p>
-            </div>
+        <div class="card w-full bg-base-100 p-5">
+            <p>{comment}</p>
             <div className='flex items-center mt-9'>
                 <div className='bg-secondary p-1 rounded-full'>
                     <img className='bg-white p-1 rounded-full' src={img} alt="" />
