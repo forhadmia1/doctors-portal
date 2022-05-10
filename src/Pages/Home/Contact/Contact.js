@@ -10,9 +10,9 @@ const Contact = () => {
             </div>
             <div className='mt-10 md:w-1/3 mx-auto w-full p-4'>
                 <form className='flex items-center flex-col gap-5'>
-                    <input type="email" placeholder="Email" class="input w-full" />
-                    <input type="email" placeholder="Subject" class="input w-full" />
-                    <textarea class="textarea w-full" rows={4} placeholder="Message"></textarea>
+                    <input type="email" placeholder="Email" className="input w-full" />
+                    <input type="email" placeholder="Subject" className="input w-full" />
+                    <textarea className="textarea w-full" rows={4} placeholder="Message"></textarea>
                     <ButtonPrimary>Submit</ButtonPrimary>
                 </form>
             </div>
