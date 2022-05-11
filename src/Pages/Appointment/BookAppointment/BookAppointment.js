@@ -7,7 +7,7 @@ const BookAppointment = ({ date }) => {
     const [services, setServices] = useState([])
     const [treatment, setTreatment] = useState(null)
     useEffect(() => {
-        fetch('Services.json')
+        fetch('http://localhost:5000/service')
             .then(res => res.json())
             .then(data => setServices(data))
     }, [])
@@ -18,7 +18,7 @@ const BookAppointment = ({ date }) => {
                 {
                     services.map(service => <Service
                         service={service}
-                        key={service.id}
+                        key={service._id}
                         setTreatment={setTreatment}
                     />)
                 }
