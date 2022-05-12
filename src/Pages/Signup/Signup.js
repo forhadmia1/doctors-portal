@@ -1,75 +1,76 @@
-import React, { useEffect, useRef } from 'react';
-import { useSendPasswordResetEmail, useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import React from 'react';
+import { useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { Link, useNavigate } from 'react-router-dom';
 import auth from '../../firebase.init';
 import Loading from '../Shared/Loading';
 
-const Login = () => {
+const Signup = () => {
+    const navigate = useNavigate()
     //sign in with google
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
-    //get email 
-    const emailRef = useRef();
+    //update profile
+    const [updateProfile, updating, profileError] = useUpdateProfile(auth);
     //signin with email and password
     const [
-        signInWithEmailAndPassword,
+        createUserWithEmailAndPassword,
         user,
         loading,
         error,
-    ] = useSignInWithEmailAndPassword(auth);
-    //password reset email send
-    const [sendPasswordResetEmail, sending, resetError] = useSendPasswordResetEmail(
-        auth
-    );
+    ] = useCreateUserWithEmailAndPassword(auth);
+
     //form submit 
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const onSubmit = data => {
-        signInWithEmailAndPassword(data.email, data.password)
+
+    const onSubmit = async data => {
+        await createUserWithEmailAndPassword(data.email, data.password)
+        await updateProfile({ displayName: data.name });
     };
 
     //login error handle
     let signError;
-    if (error || gError) {
-        signError = <p className='text-center text-red-500'>{error.code.split('/')[1] || gError.code.split('/')[1]}</p>
+    if (error || gError || profileError) {
+        signError = <p className='text-center text-red-500'>{error.code.split('/')[1] || gError.code.split('/')[1] || profileError.code.split('/')[1]}</p>
     }
-    //navigate 
-    const location = useLocation()
-    const navigate = useNavigate()
-    const from = location.state?.from?.pathname || "/";
-
-    useEffect(() => {
-        if (user || gUser) {
-            navigate(from, { replace: true })
-        }
-    }, [user, gUser])
+    if (user || gUser) {
+        navigate('/')
+    }
 
     //set loading spinner 
-    if (gLoading || loading) {
+    if (gLoading || loading || updating) {
         return <Loading />
-    }
-
-    //password reset function handle
-    const resetPassword = () => {
-
-        // if (!email) {
-        //     toast.error('Please Input An Eamil!')
-        // }
-        // sendPasswordResetEmail(email);
     }
 
     return (
         <div className='flex justify-center items-center h-screen'>
             <div className="card w-96 bg-base-100 shadow-xl">
                 <div className="card-body">
-                    <h2 className="text-center text-2xl font-bold">LogIn</h2>
+                    <h2 className="text-center text-2xl font-bold">Sign Up</h2>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-control w-full max-w-xs">
                             <label className="label">
                                 <span className="label-text font-semibold">Email</span>
                             </label>
                             <input
-                                ref={emailRef}
+                                type="text"
+                                placeholder="Name"
+                                className="input input-bordered w-full max-w-xs"
+                                {...register("name", {
+                                    required: {
+                                        value: true,
+                                        message: 'Name is required'
+                                    }
+                                })} />
+
+                            <label className="label">
+                                {errors.name?.type === 'required' && <span className='text-red-600'>{errors.name.message}</span>}
+                            </label>
+                        </div>
+                        <div className="form-control w-full max-w-xs">
+                            <label className="label">
+                                <span className="label-text font-semibold">Email</span>
+                            </label>
+                            <input
                                 type="email"
                                 placeholder="Email"
                                 className="input input-bordered w-full max-w-xs"
@@ -112,12 +113,11 @@ const Login = () => {
                                 {errors.password?.type === 'minLength' && <span className='text-red-600'>{errors.password.message}</span>}
                             </label>
                         </div>
-                        <p onClick={resetPassword} className="btn btn-link p-0">Forget password?</p>
 
-                        <input className="btn btn-active btn-md px-6 block w-full" type="submit" value={'Login'} />
+                        <input className="btn btn-active btn-md px-6 block w-full" type="submit" value={'SignUp'} />
                         {signError}
                     </form>
-                    <p><small className='font-semibold'>New to doctors rortal. <Link className='text-secondary' to={'/signup'}>Create an account?</Link></small></p>
+                    <p><small className='font-semibold'>Already have an account? <Link className='text-secondary' to={'/login'}>LogIn</Link></small></p>
                     <div className="divider">OR</div>
                     <button onClick={() => signInWithGoogle()} className="btn btn-outline">Continue With Google</button>
                 </div>
@@ -126,4 +126,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Signup;
