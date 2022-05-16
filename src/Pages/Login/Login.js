@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import auth from '../../firebase.init';
+import useToken from '../../hooks/useToken';
 import Loading from '../Shared/Loading';
 
 const Login = () => {
@@ -18,6 +19,9 @@ const Login = () => {
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
+
+    const [token] = useToken(user || gUser)
+
     //password reset email send
     const [sendPasswordResetEmail, sending, resetError] = useSendPasswordResetEmail(
         auth
@@ -39,10 +43,10 @@ const Login = () => {
     const from = location.state?.from?.pathname || "/";
 
     useEffect(() => {
-        if (user || gUser) {
+        if (token) {
             navigate(from, { replace: true })
         }
-    }, [user, gUser])
+    }, [token, from, navigate])
 
     //set loading spinner 
     if (gLoading || loading) {

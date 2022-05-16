@@ -7,6 +7,11 @@ import auth from '../../firebase.init';
 const Navbar = () => {
     const navigate = useNavigate()
     const [user] = useAuthState(auth)
+    const handleSignOut = () => {
+        signOut(auth)
+        navigate('/')
+        localStorage.removeItem('accessToken')
+    }
     return (
         <div className='bg-base-100 sticky top-0 z-50'>
             <div className="container navbar  mx-auto">
@@ -22,7 +27,7 @@ const Navbar = () => {
                             <li><Link to={'/about'} className='hover:bg-accent hover:text-white'>About</Link></li>
                             <li><Link to={'/contact'} className='hover:bg-accent hover:text-white'>Contact us</Link></li>
                             {user && <li><Link to={'/dashboard'} className='hover:bg-accent hover:text-white'>Dashboard</Link></li>}
-                            <li>{!user ? <Link to={'/login'} className='hover:bg-accent hover:text-white'>Login</Link> : <button onClick={() => { signOut(auth); navigate('/') }} className="btn btn-accent text-white">SignOut</button>}</li>
+                            <li>{!user ? <Link to={'/login'} className='hover:bg-accent hover:text-white'>Login</Link> : <button onClick={handleSignOut} className="btn btn-accent text-white">SignOut</button>}</li>
                         </ul>
                     </div>
                     <Link to={'/'} className="btn btn-ghost normal-case text-xl">Doctors Portal</Link>
@@ -40,7 +45,7 @@ const Navbar = () => {
                         <li><Link to={'/review'} className='hover:bg-accent hover:text-white'>Reviews</Link></li>
                         <li><Link to={'/contact'} className='hover:bg-accent hover:text-white'>Contact us</Link></li>
                         {user && <li><Link to={'/dashboard'} className='hover:bg-accent hover:text-white'>Dashboard</Link></li>}
-                        <li>{!user ? <Link to={'/login'} className='hover:bg-accent hover:text-white'>Login</Link> : <button onClick={() => { signOut(auth); navigate('/') }} className="btn btn-accent text-white">SignOut</button>}</li>
+                        <li>{!user ? <Link to={'/login'} className='hover:bg-accent hover:text-white'>Login</Link> : <button onClick={handleSignOut} className="btn btn-accent text-white">SignOut</button>}</li>
                     </ul>
                 </div>
             </div>
