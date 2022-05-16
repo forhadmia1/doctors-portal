@@ -10,7 +10,7 @@ const BookAppointment = ({ date }) => {
     const formatDate = format(date, 'PP');
 
     const { isLoading, data: services, refetch } = useQuery(['available', formatDate], () =>
-        fetch(`http://localhost:5000/available?date=${formatDate}`)
+        fetch(`https://evening-oasis-06751.herokuapp.com/available?date=${formatDate}`)
             .then(res => res.json())
     )
 
